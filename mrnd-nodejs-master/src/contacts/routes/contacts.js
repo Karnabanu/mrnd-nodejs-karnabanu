@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var id = 1;
-var contact_base = {};
+var contact_base = {}, message_base = {};
 
 router.get('/', function (req, res, next) {
     //res.send('contacts you need to enter with proper data');
@@ -82,4 +82,51 @@ router.put('/:id', function(req, res, next) {
     res.send(payload);
 });
 
+router.get('/:id/messages', function (req, res, next) {
+
+    var new_id = req.params.id;
+    var messages = message_base[new_id];
+
+    if ((typeof messages) == 'undefined') {
+        var contact = contact_base[new_id];
+        if ((typeof contact) == 'undefined') {
+            var html = 'Id not issued yet';
+            res.send(html);
+        }
+        var html = 'No Messages for this id' + '<br>' + 'please enter valid id';
+        res.send(html);
+    }
+    res.send(messages);
+
+
+});
+
+
+router.post('/:id/messages', function (req, res, next) {
+
+    var new_id=req.params.id;
+    var contact = contact_base[new_id];
+    var new_message;
+    if ((typeof contact) == 'undefined') {
+        var html = 'Id not issued yet';
+        res.send(html);
+    }
+
+    else {
+        var messages = message_base[new_id];
+        console.log(req.body);
+        new_message = req.body.message;
+        if ((typeof messages) == 'undefined') {
+
+            messages = [new_message];
+            message_base[new_id] = messages;
+        }
+        else {
+            messages.push(new_message);
+            message_base[new_id] = messages;
+        }
+        res.send(messages);
+    }
+    
+});
 module.exports = router;
