@@ -1,4 +1,3 @@
-
 describe("Contacts Test Suite", function(){
 
 	//var request = require('request');
